@@ -1,5 +1,5 @@
 CREATE TABLE `Utilisateurs` (
-  `idUtilisateur` int,
+  `idUtilisateur` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255),
   `prenom` varchar(255),
   `pseudo` varchar(255),
@@ -10,7 +10,7 @@ CREATE TABLE `Utilisateurs` (
 );
 
 CREATE TABLE `Articles` (
-  `idArticle` int,
+  `idArticle` int NOT NULL AUTO_INCREMENT,
   `datepublication` datetime,
   `level` int,
   `idTags` varchar(50),
@@ -21,7 +21,7 @@ CREATE TABLE `Articles` (
 
 
 CREATE TABLE `Produits` (
-  `idProduit` int,
+  `idProduit` int NOT NULL AUTO_INCREMENT,
   `libelle` varchar(255),
   `description` varchar(255),
   `imageLink` varchar(2048),
@@ -31,18 +31,18 @@ CREATE TABLE `Produits` (
 );
 
 CREATE TABLE `subArticle` (
-  `idSubArticle` int,
+  `idSubArticle` int NOT NULL AUTO_INCREMENT,
   `titre` varchar(255),
   `description` varchar(2048),
   `richTextData` longtext,
   `videolink` varchar(2048),
   `language` varchar(2),
-  ` idArticle` int,
+  `idArticle` int,
   PRIMARY KEY (`idSubArticle`)
 );
 
 CREATE TABLE `Tags` (
-  `idTag` int,
+  `idTag` int NOT NULL AUTO_INCREMENT,
   `libelle` varchar(50),
   `language` varchar(2),
   `idArticle` int,
@@ -53,21 +53,21 @@ CREATE TABLE `Tags` (
 
 
 CREATE TABLE `hasSubArticles` (
-  `id` int,
+  `id` int NOT NULL AUTO_INCREMENT,
   `idArticle` int,
   `idSubArticle` int,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `hasProducts` (
-  `id` int,
+  `id` int NOT NULL AUTO_INCREMENT,
   `idArticle` int,
   `idProduct` int,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `hasTags` (
-  `id` int,
+  `id` int NOT NULL AUTO_INCREMENT,
   `idArticle` int,
   `idTag` int,
 	PRIMARY KEY (`id`)
