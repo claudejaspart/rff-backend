@@ -1,12 +1,13 @@
 const connection = require('./databaseConnection');
 const express = require('express');
-const getArticlesRouter = express.Router();
+const getSubArticlesRouter = express.Router();
 
 
 // récupère la liste des articles
-getArticlesRouter.get('/subarticles', (error,response) =>
+
+getSubArticlesRouter.get('/subarticles', (error,response) =>
 {
-    getArticlesQuery = 'select * from subarticle;';
+    getArticlesQuery = "select * from subarticle WHERE language='fr';";
 
     connection.connect(err => 
     {
@@ -19,7 +20,7 @@ getArticlesRouter.get('/subarticles', (error,response) =>
             {
                 console.log(result);
                 connection.end();
-                response.send("ok");
+                response.send(result);
             });
         }
     });
@@ -27,7 +28,7 @@ getArticlesRouter.get('/subarticles', (error,response) =>
 
 
 // export
-module.exports = getArticlesRouter;   
+module.exports = getSubArticlesRouter;   
 
 
 // database
