@@ -5,30 +5,33 @@ const getSubArticlesRouter = express.Router();
 
 // récupère la liste des articles
 
-getSubArticlesRouter.get('/subarticles', (error,response) =>
+getSubArticlesRouter.get('/subarticles', (request,response) =>
 {
-    getArticlesQuery = "select * from subarticle WHERE language='fr';";
+    // récupération langue
 
-    connection.connect(err => 
+    console.log(request.query);
+    let lang = request.query.lang;
+    // console.log(lang);
+    let sqlQuery = "";
+
+    if(request.query.lang) {
+        sqlQuery = `SELECT * FROM subarticle WHERE language = '${lang}';`;
+    }
+    else {
+        sqlQuery = 'SELECT * FROM subarticle;';
+    }
+        
+    console.log(sqlQuery);
+    connection.query(sqlQuery, (err,result,fields)=>
     {
-        if(err)
-            return console.error('error: ' + err.message);
-        else
-        {
-            console.log('Connected to MySQL server.');
-            connection.query(getArticlesQuery, (err,result,fields)=>
-            {
-                console.log(result);
-                connection.end();
-                response.send(result);
-            });
-        }
+        // console.log(result);
+        response.send(result);
     });
 });
 
-
 // export
-module.exports = getSubArticlesRouter;   
+module.exports = getSubArticlesRouter;
+
 
 
 // database
