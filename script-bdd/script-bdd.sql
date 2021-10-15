@@ -48,6 +48,8 @@ CREATE TABLE `Tags` (
   PRIMARY KEY (`idTag`)
 );
 
+/* tables de jointure */
+
 CREATE TABLE `hasSubArticles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `idArticle` int,
