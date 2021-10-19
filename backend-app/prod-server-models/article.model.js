@@ -12,11 +12,19 @@ const Article = (article)=>
 }
 
 // liste des requetes
-
 // getAll
+
+// recupere tous les articles et leurs descriptions en francais
 Article.getAll = (result) => 
 {
-    sql.query("SELECT * FROM articles", (err, resultats) => 
+    /*
+        select * from hassubarticles hsa 
+        inner join articles a on a.idArticle = hsa.idArticle 
+        inner join subarticle sa on sa.idSubArticle = hsa.idSubArticle 
+        where sa.language = "fr";
+    */
+   
+    sql.query(`select * from hassubarticles hsa inner join articles a on a.idArticle = hsa.idArticle inner join subarticle sa on sa.idSubArticle = hsa.idSubArticle where sa.language = 'fr';`, (err, resultats) => 
     {
         if (err) 
         {
