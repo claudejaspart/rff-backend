@@ -7,13 +7,17 @@ let connection = mysql.createConnection({
 	database: 'rff'
 });
 
-// connection.connect(err => 
-// {
-//     if(err)
-//         return console.error('error: ' + err.message);
+connection.connect(err => 
+{
+    if(err)
+        return console.error('error: ' + err.message);
 
-//     console.log('Connected to MySQL server.');
-// });
+    console.log('Connected to MySQL server.');
+});
+
+// export
+module.exports = connection;   
+
 
 // connection.end(err => 
 // {
@@ -24,5 +28,5 @@ let connection = mysql.createConnection({
 // });
 
 
-// export
-module.exports = connection;   
+
+
