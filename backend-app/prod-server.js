@@ -6,8 +6,9 @@ const port = 4201;
 // utilisation des middleware
 app.use(cors());
 
-// liens vers les controleurs
-require("./prod-server-routes/article-routes")(app);
+// liens vers les routes
+require("./prod-server-routes/article.routes")(app);
+require("./prod-server-routes/tag.route")(app);
 
 // lancement du serveur
 app.listen(port,  () =>

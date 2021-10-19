@@ -30,7 +30,5 @@ Article.getAll = (result) =>
     });
 };
 
-
-
 // exportation
 module.exports = Article;
