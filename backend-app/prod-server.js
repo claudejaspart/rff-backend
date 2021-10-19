@@ -1,20 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
-const path = require('path');
-var cors = require('cors');
+const port = 4201;
+
+// utilisation des middleware
 app.use(cors());
 
-// liste des API edition d'un article
-const getArticles  = require('./api-list/get-articles');
-
-app.use(getArticles);
-
-// renvoi le site web
-// app.use(express.static(path.join(__dirname, './front-end/rff-blog')));
-// app.get('/', (req, res) => res.sendFile(path.join(__dirname)));
+// liens vers les controleurs
+require("./prod-server-routes/article-routes")(app);
 
 // lancement du serveur
-app.listen(4201, function () 
+app.listen(port,  () =>
 {
-    console.log('RFF server listening on port 4201!')
+    console.log(`Le serveur backend RFF lancé sur le port ${port}!`);
 });
