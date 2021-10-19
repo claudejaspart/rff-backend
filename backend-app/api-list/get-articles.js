@@ -1,4 +1,4 @@
-const connection = require('./databaseConnection');
+const connection = require('./server');
 const express = require('express');
 const getSubArticlesRouter = express.Router();
 
@@ -8,8 +8,6 @@ const getSubArticlesRouter = express.Router();
 getSubArticlesRouter.get('/subarticles', (request,response) =>
 {
     // récupération langue
-
-    console.log(request.query);
     let lang = request.query.lang;
     // console.log(lang);
     let sqlQuery = "";

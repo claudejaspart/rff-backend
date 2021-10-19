@@ -16,13 +16,14 @@ console.log('Successfully connected to MySQL server.');
 
 });
 
-connection.end(err => {
+/* connection.end(err => {
 	if(err) {
 		return console.error('error: ' + err.message);
 }
 
 console.log('Close the database connection.');
-});
+}); */
+
 
 // export
 module.exports = connection;   
