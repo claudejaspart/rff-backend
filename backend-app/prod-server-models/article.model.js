@@ -1,42 +1,55 @@
 const sql = require("./db");
+const Tag = require("./tag.model");
+const Tags = require("./tag.model");
 
 // constructeur
-const Article = (article)=>
+let Article = (article)=>
 {
     this.idArticle = article.idArticle,
     this.datepublication = article.datepublication,
     this.level = article.level,
-    this.products = article.products,
-    this.subArticle = article.subArticle,
     this.tags = article.tags
 }
 
-// liste des requetes
-// getAll
 
 // recupere tous les articles et leurs descriptions en francais
 Article.getAll = (result) => 
-{
-    /*
-        select * from hassubarticles hsa 
-        inner join articles a on a.idArticle = hsa.idArticle 
-        inner join subarticle sa on sa.idSubArticle = hsa.idSubArticle 
-        where sa.language = "fr";
-    */
-   
-    sql.query(`select * from hassubarticles hsa inner join articles a on a.idArticle = hsa.idArticle inner join subarticle sa on sa.idSubArticle = hsa.idSubArticle where sa.language = 'fr';`, (err, resultats) => 
+{   
+    getAllArticlesPromise()
+    .then(articles=>
     {
-        if (err) 
+        Tag.getTagsPromise(getListArticleIds(articles))
+        .then(tags=>
         {
-            console.log("error: ", err);
-            result(null, err);
-            return;
-        }
-
-        console.log("Articles: ", resultats);
-        result(null, resultats);
-    });
+            result(null, insertData(articles, tags, 'tags'));
+        })
+        .catch(err=>result(null, articles))
+    })
+    .catch(err=>result(err, null));
 };
+
+// retourne la liste des IDs des articles récupérés
+function getListArticleIds(articles)
+{
+    return [...articles].map(article => article.idArticle);
+}
+
+// encapsulation une promise
+function getAllArticlesPromise()
+{
+    return new Promise((resolve, reject)=> sql.query("select * from articles order by idArticle", (err, articles) => err ? reject(err) : resolve(articles)))
+}
+
+// insertion des tags dans les articles
+function insertData(articles,data, dataLabel)
+{
+    [...articles].forEach(article => 
+    {
+        article[dataLabel] = data.filter(el => el.idArticle === article.idArticle);
+    });
+
+    return articles;
+}
 
 // exportation
 module.exports = Article;

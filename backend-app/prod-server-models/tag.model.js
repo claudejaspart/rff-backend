@@ -8,27 +8,22 @@ const Tag = (tag)=>
     this.language = tag.language
 }
 
-Tag.findById = (idArticle, result) => 
+Tag.findByIds = (idArticles, result) => 
 {
-    sql.query(`SELECT * FROM hasTags ht inner join tags t on t.idTag = ht.idTag WHERE ht.idArticle = ${idArticle}`, (err, res) => 
-    {
-        if (err) 
-        {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
+    this.getTagsPromise(idArticles)
+    .then(result(null, res))
+    .catch(result(err, null));
+};
 
-        if (res.length) 
-        {
-            console.log("tags trouvés: ", res);
-            result(null, res);
-            return;
-        }
+// encapsulation une promise
+Tag.getTagsPromise = (idArticles) =>
+{
+    let tagQuery =      "select idArticle, libelle, language from tags t \
+                        inner join hastags ht on ht.idTag = t.idTag \
+                        where ht.idArticle in (?) \
+                        order by idArticle desc" ;
 
-        // aucun tags trouvés
-        result({ kind: "not_found" }, null);
-    });
+    return new Promise((resolve, reject)=>sql.query(tagQuery, [idArticles], (err, tags) => err ? reject(err) : resolve(tags)))
 };
 
 module.exports = Tag;

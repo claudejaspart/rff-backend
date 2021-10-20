@@ -8,6 +8,9 @@ exports.findAll = (req, res) =>
         if (err)
             res.status(500).send({message: err.message || "Erreur lors de la récupération des articles."});
         else 
+        {
             res.send(data);
+        }
+            
     });
 };
