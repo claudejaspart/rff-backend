@@ -1,7 +1,7 @@
 const sql = require("./db");
 
 // constructeur
-const Tag = (tag)=>
+const Tag = (tag) =>
 {
     this.idTag = tag.idTag,
     this.libelle = tag.libelle,
