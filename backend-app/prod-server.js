@@ -8,7 +8,7 @@ app.use(cors());
 
 // liens vers les routes
 require("./prod-server-routes/article.routes")(app);
-require("./prod-server-routes/tag.route")(app);
+
 
 // lancement du serveur
 app.listen(port,  () =>
