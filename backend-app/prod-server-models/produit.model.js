@@ -10,6 +10,28 @@ const Produit = (produit)=>
     this.subProduit = produit.subProduit
 }
 
+
+
+// recupere la liste complete de tous les articles avec tous leurs détails
+Produit.getCompleteList = (result) => 
+{   
+    // noyau des articles
+    getAllProduitsPromise()
+    .then(produits=>
+    {
+        SubProduit.getSubProduitsPromise(getListProduitIds(produits))
+        .then(subProduits =>
+        {
+            produits = insertData(produits, subProduits, 'subProduits');
+            result(null, produits);
+        })
+        .catch(err=>result(err, null));
+    })
+    .catch(err=>result(err, null));
+};
+
+
+
 // retourne tous les produits et leurs sous-produits
 Produit.getProduitsAndSubsPromise = (idArticles) =>
 {
@@ -30,15 +52,23 @@ Produit.getProduitsAndSubsPromise = (idArticles) =>
     });
 }
 
-// requete : tous les produits 
+// requete : tous les produits d'une liste d'ids
 Produit.getProduitsPromise = (idArticles) =>
 {
-    let queryString =   "select hpr.idArticle, prod.idProduit, prod.imageLink, prod.productLink from produits prod \
+    let queryString =   "select hpr.idArticle, prod.idProduit, prod.imageLink, prod.produitLink from produits prod \
                         inner join hasProduits hpr on hpr.idProduit = prod.idProduit \
                         where hpr.idArticle in (?);"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, produits) => err ? reject(err) : resolve(produits)))
 }
+
+// requete : tous les produits 
+getAllProduitsPromise = () =>
+{
+    let queryString =   "select prod.idProduit, prod.imageLink, prod.produitLink from produits prod";
+    return new Promise((resolve, reject)=> sql.query(queryString, (err, produits) => err ? reject(err) : resolve(produits)))
+}
+
 
 // retourne la liste des IDs des produits récupérés
 function getListProduitIds(produits)
