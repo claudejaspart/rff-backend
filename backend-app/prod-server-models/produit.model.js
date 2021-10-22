@@ -34,25 +34,29 @@ Produit.getProduitsAndSubsPromise = (idArticles) =>
 Produit.getProduitsPromise = (idArticles) =>
 {
     let queryString =   "select hpr.idArticle, prod.idProduit, prod.imageLink, prod.productLink from produits prod \
-                        inner join hasProducts hpr on hpr.idProduit = prod.idProduit \
+                        inner join hasProduits hpr on hpr.idProduit = prod.idProduit \
                         where hpr.idArticle in (?);"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, produits) => err ? reject(err) : resolve(produits)))
 }
 
-// retourne la liste des IDs des articles récupérés
+// retourne la liste des IDs des produits récupérés
 function getListProduitIds(produits)
 {
     return [...produits].map(produit => produit.idProduit);
 }
 
 
-// insertion des différents champs dans les articles
+// insertion des différents champs dans les produits
 function insertData(produits,data, dataLabel)
 {
     [...produits].forEach(produit => 
     {
+        // rattache les subProduit au produit
         produit[dataLabel] = data.filter(el => el.idProduit === produit.idProduit);
+
+        // supprime les champs idProduit
+        for (i in produit[dataLabel]) delete produit[dataLabel][i].idProduit
     });
 
     return produits;
