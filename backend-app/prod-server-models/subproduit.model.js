@@ -15,7 +15,7 @@ SubProduit.getSubProduitsPromise = (idProduits) =>
 {
     let queryString =   "select hsp.idProduit, sp.idSubProduit, sp.libelle, sp.description, sp.language \
                         from subproduits sp                                                             \
-                        inner join hassubproducts hsp on hsp.idSubProduit = sp.idSubProduit             \
+                        inner join hassubproduits hsp on hsp.idSubProduit = sp.idSubProduit             \
                         where idProduit in (?);"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idProduits], (err, subProduits) => err ? reject(err) : resolve(subProduits)))
