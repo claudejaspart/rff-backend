@@ -5,4 +5,10 @@ module.exports = (app) =>
     // route : récupération de tous les articles
     app.get("/articles", articles.findAll);
 
+    // route : récupération de tous les articles
+    app.get("/miniarticles", articles.findAllReduced);
+
+    // route : récupération d'un article
+    app.get("/article/:idArticle", articles.findOne);
+
 };
