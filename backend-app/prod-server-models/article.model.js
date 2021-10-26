@@ -23,7 +23,7 @@ Article.getAll = (result) =>
     .then(articles=>
     {
         // les tags
-        Tag.getTagsPromise(getListArticleIds(articles))
+        Tag.getTagsByIdPromise(getListArticleIds(articles))
         .then(tags =>
         {
             articles = insertData(articles, tags, 'tags')
@@ -60,7 +60,7 @@ Article.getAllReduced = (result) =>
     .then(articles=>
     {
         // les tags
-        Tag.getTagsPromise(getListArticleIds(articles))
+        Tag.getTagsByIdPromise(getListArticleIds(articles))
         .then(tags =>
         {
             articles = insertData(articles, tags, 'tags')
@@ -88,7 +88,7 @@ Article.getOne = (articleId, result) =>
     .then(articles=>
     {
         // les tags
-        Tag.getTagsPromise(getListArticleIds(articles))
+        Tag.getTagsByIdPromise(getListArticleIds(articles))
         .then(tags =>
         {
             articles = insertData(articles, tags, 'tags')
