@@ -25,7 +25,7 @@ SubArticle.getSubArticlesPromise = (idArticles) =>
 // requete : version réduite
 SubArticle.getSubArticlesReducedPromise = (idArticles) =>
 {
-    let queryString =   "select hsa.idArticle, sa.idSubarticle, sa.titre, sa.description, sa.language from subarticles sa \
+    let queryString =   "select hsa.idArticle, sa.idSubarticle, sa.titre, sa.language from subarticles sa \
                         inner join hassubarticles hsa on hsa.idSubArticle = sa.idSubArticle \
                         where hsa.idArticle in (?) \
                         order by language asc;"
