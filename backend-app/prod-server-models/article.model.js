@@ -38,7 +38,7 @@ Article.getAll = (result) =>
                 Produit.getProduitsAndSubsPromise(getListArticleIds(articles))
                 .then(produits =>
                 {
-                    articles = insertData(articles, produits, 'produits')
+                    articles = insertData(articles, produits, 'produits');
                     result(null, articles);
                 })
                 .catch(err=>result(null, articles))
@@ -103,7 +103,8 @@ Article.getOne = (articleId, result) =>
                 Produit.getProduitsAndSubsPromise(getListArticleIds(articles))
                 .then(produits =>
                 {
-                    articles = insertData(articles, produits, 'produits')
+                    articles = insertData(articles, produits, 'produits');
+
                     result(null, articles);
                 })
                 .catch(err=>result(null, articles))

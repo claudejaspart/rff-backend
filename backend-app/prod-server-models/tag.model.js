@@ -10,13 +10,20 @@ const Tag = (tag) =>
 
 Tag.findByIds = (idArticles, result) => 
 {
-    this.getTagsPromise(idArticles)
+    this.getTagsByIdPromise(idArticles)
     .then(result(null, res))
     .catch(result(err, null));
 };
 
+Tag.findAll = (result) => 
+{
+    getAllTagsPromise()
+    .then(tags => result(null, tags))
+    .catch(err => result(err, null));
+};
+
 // encapsulation une promise
-Tag.getTagsPromise = (idArticles) =>
+Tag.getTagsByIdPromise = (idArticles) =>
 {
     let tagQuery =      "select idArticle, libelle, language from tags t \
                         inner join hastags ht on ht.idTag = t.idTag \
@@ -24,6 +31,12 @@ Tag.getTagsPromise = (idArticles) =>
                         order by idArticle desc" ;
 
     return new Promise((resolve, reject)=>sql.query(tagQuery, [idArticles], (err, tags) => err ? reject(err) : resolve(tags)))
+};
+
+getAllTagsPromise = () =>
+{
+    let tagQuery = "select libelle, language from tags order by libelle;";
+    return new Promise((resolve, reject)=>sql.query(tagQuery, (err, tags) => err ? reject(err) : resolve(tags)))
 };
 
 module.exports = Tag;
