@@ -11,22 +11,24 @@ const SubArticle = (subArticle) =>
     this.language = subArticle.language 
 }
 
-// requete : tous les sous-articles de la table sous-article
+// requête : version complete - tous les sous-articles de la table sous-article
 SubArticle.getSubArticlesPromise = (idArticles) =>
 {
     let queryString =   "select hsa.idArticle, sa.idSubarticle, sa.titre, sa.description, sa.richTextData, sa.videolink, sa.language from subarticles sa \
                         inner join hassubarticles hsa on hsa.idSubArticle = sa.idSubArticle \
-                        where hsa.idArticle in (?);"
+                        where hsa.idArticle in (?) \
+                        order by language asc;"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, subArticles) => err ? reject(err) : resolve(subArticles)))
 }
 
-// requete : tous les sous-articles de la table sous-article avec que le titre, la description, et la langue
+// requete : version réduite
 SubArticle.getSubArticlesReducedPromise = (idArticles) =>
 {
     let queryString =   "select hsa.idArticle, sa.idSubarticle, sa.titre, sa.description, sa.language from subarticles sa \
                         inner join hassubarticles hsa on hsa.idSubArticle = sa.idSubArticle \
-                        where hsa.idArticle in (?);"
+                        where hsa.idArticle in (?) \
+                        order by language asc;"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, subArticles) => err ? reject(err) : resolve(subArticles)))
 }

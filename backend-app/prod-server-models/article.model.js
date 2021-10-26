@@ -126,7 +126,7 @@ function getListArticleIds(articles)
     return [...articles].map(article => article.idArticle);
 }
 
-// requete : tous les articles de la table articles 
+// requête : tous les articles de la table articles 
 function getAllArticlesPromise()
 {
     return new Promise((resolve, reject)=> sql.query("select * from articles order by idArticle", (err, articles) => err ? reject(err) : resolve(articles)))
