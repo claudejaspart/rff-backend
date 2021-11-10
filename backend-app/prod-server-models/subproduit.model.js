@@ -38,4 +38,21 @@ SubProduit.updateSubProduitsPromise = (majSubProduits) =>
     return new Promise((resolve, reject)=> sql.query(queryString, data, (err, querysubprod) => err ? reject(err) : resolve(querysubprod)))
 }
 
+// requete : ajout d'un subproduit d'un produit
+SubProduit.addSubProduitsPromise = (addSubProduits) =>
+{
+   let data = [];
+   let atomicQueryString =  "INSERT INTO subProduits (libelle, description, language) VALUES (?,?,?);";
+   let queryString = "";
+    addSubProduits.forEach(addSubProd => 
+    {
+        data.push(addSubProd.libelle);
+        data.push(addSubProd.description);
+        data.push(addSubProd.language);
+        queryString += atomicQueryString;
+    });
+
+    return new Promise((resolve, reject)=> sql.query(queryString, data, (err, querysubprod) => err ? reject(err) : resolve(querysubprod)))
+}
+
 module.exports = SubProduit;

@@ -19,8 +19,17 @@ exports.getAll = (req, res) =>
 // controlleur - ajout d'un produit
 exports.add = (req, res) => 
 {
-    console.log("new product");
-    res.status(200).send();
+    Produit.addProduit(req.body, (err, result) => 
+    {
+        if (err)
+        {
+            res.status(500).send({message:err.message || "Erreur lors de la mise à jour du produit."});
+        }
+        else 
+        {
+            res.status(200).send();
+        }
+    });
 };
 
 // controlleur - maj d'un produit

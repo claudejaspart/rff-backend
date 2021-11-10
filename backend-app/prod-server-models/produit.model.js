@@ -1,5 +1,6 @@
 const sql = require("./db");
-const SubProduit = require('./subproduit.model')
+const SubProduit = require('./subproduit.model');
+const hasSubProduits = require('./hasSubProduits.model');
 
 // constructeur
 const Produit = (produit)=>
@@ -64,6 +65,31 @@ Produit.updateProduit = (majProduit, result) =>
     .catch(err => result(err, null));
 }
 
+// Creation d'un produit
+Produit.addProduit = (addProduit, result) =>
+{
+    Produit.addProduitsPromise(addProduit)
+    .then(queryres =>
+    {
+        // id du produit créé
+        let newProduitId = queryres.insertId;
+
+        // insere les sous-produits
+        SubProduit.addSubProduitsPromise(addProduit.subProduits)
+        .then(querysubprod => 
+        {
+            // ajoute la relation entre le produit et les sous-produits
+            let newSubProduitsIds = [querysubprod[0].insertId,querysubprod[1].insertId];
+            hasSubProduits.linkProductWithSubProductsPromise(newProduitId, newSubProduitsIds)
+            .then(queryLink => result(null, queryLink))
+            .catch(err => result(err, null))
+        })
+        .catch(err => result(err, null))
+    })
+    .catch(err => result(err, null));
+}
+
+
 // requete : tous les produits d'une liste d'ids
 Produit.getProduitsPromise = (idArticles) =>
 {
@@ -77,7 +103,7 @@ Produit.getProduitsPromise = (idArticles) =>
 // requete : tous les produits 
 getAllProduitsPromise = () =>
 {
-    let queryString =   "select prod.idProduit, prod.imageLink, prod.produitLink from produits prod";
+    let queryString =   "select prod.idProduit, prod.imageLink, prod.produitLink from produits prod;";
     return new Promise((resolve, reject)=> sql.query(queryString, (err, produits) => err ? reject(err) : resolve(produits)))
 }
 
@@ -94,6 +120,16 @@ Produit.updateProduitsPromise = (majProduit) =>
 
     // execution de la requete
     return new Promise((resolve, reject)=> sql.query(queryString,[imageUrl, produitUrl, produitId] , (err, queryres) => err ? reject(err) : resolve(queryres)))
+}
+
+// requete : tmaj d'un produit
+Produit.addProduitsPromise = (newProduit) =>
+{
+    // requete de maj
+    let queryString = "INSERT INTO Produits (imageLink, produitLink) VALUES (?,?);";
+
+    // execution de la requete
+    return new Promise((resolve, reject)=> sql.query(queryString,[newProduit.imageLink,newProduit.produitLink] , (err, queryres) => err ? reject(err) : resolve(queryres)))
 }
 
 

@@ -10,5 +10,4 @@ module.exports = (app) =>
 
     // route : maj d'un produit
     app.put("/produit", produits.update);
-
 };
