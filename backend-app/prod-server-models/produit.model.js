@@ -6,7 +6,7 @@ const Produit = (produit)=>
 {
     this.idProduit = produit.idProduit,
     this.imageLink = produit.imageLink,
-    this.productLink = produit.productLink,
+    this.produitLink = produit.produitLink,
     this.subProduit = produit.subProduit
 }
 
@@ -31,7 +31,6 @@ Produit.getCompleteList = (result) =>
 };
 
 
-
 // retourne tous les produits et leurs sous-produits
 Produit.getProduitsAndSubsPromise = (idArticles) =>
 {
@@ -52,6 +51,19 @@ Produit.getProduitsAndSubsPromise = (idArticles) =>
     });
 }
 
+// MAJ d'un produit
+Produit.updateProduit = (majProduit, result) =>
+{
+    Produit.updateProduitsPromise(majProduit)
+    .then(queryres =>
+    {
+        SubProduit.updateSubProduitsPromise(majProduit.subProduits)
+        .then(querysubprod => result(null, querysubprod))
+        .catch(err => result(err, null))
+    })
+    .catch(err => result(err, null));
+}
+
 // requete : tous les produits d'une liste d'ids
 Produit.getProduitsPromise = (idArticles) =>
 {
@@ -67,6 +79,21 @@ getAllProduitsPromise = () =>
 {
     let queryString =   "select prod.idProduit, prod.imageLink, prod.produitLink from produits prod";
     return new Promise((resolve, reject)=> sql.query(queryString, (err, produits) => err ? reject(err) : resolve(produits)))
+}
+
+// requete : tmaj d'un produit
+Produit.updateProduitsPromise = (majProduit) =>
+{
+    // recuperation des données
+    let produitId = majProduit.idProduit;
+    let imageUrl = majProduit.imageLink;
+    let produitUrl = majProduit.produitLink;
+
+    // requete de maj
+    let queryString = "UPDATE Produits SET imageLink = ?, produitLink = ? WHERE (`idProduit` = ?);";
+
+    // execution de la requete
+    return new Promise((resolve, reject)=> sql.query(queryString,[imageUrl, produitUrl, produitId] , (err, queryres) => err ? reject(err) : resolve(queryres)))
 }
 
 

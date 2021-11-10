@@ -36,11 +36,12 @@ exports.findOne = (req, res) =>
     Article.getOne(req.params.idArticle, (err, data) => 
     {
         if (err)
+        {
             res.status(500).send({message: err.message || "Erreur lors de la récupération de l'article."});
+        }
         else 
         {
             res.send(data);
         }
-            
     });
 };

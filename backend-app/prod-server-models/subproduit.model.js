@@ -10,7 +10,7 @@ const SubProduit = (subProduit)=>
 }
 
 
-// requete : tous les produits 
+// requete : tous les subproduits d'un produit
 SubProduit.getSubProduitsPromise = (idProduits) =>
 {
     let queryString =   "select hsp.idProduit, sp.idSubProduit, sp.libelle, sp.description, sp.language \
@@ -21,5 +21,21 @@ SubProduit.getSubProduitsPromise = (idProduits) =>
     return new Promise((resolve, reject)=> sql.query(queryString, [idProduits], (err, subProduits) => err ? reject(err) : resolve(subProduits)))
 }
 
+// requete : maj d'un subproduit d'un produit
+SubProduit.updateSubProduitsPromise = (majSubProduits) =>
+{
+   let data = [];
+   let atomicQueryString =  "UPDATE subProduits SET libelle = ?, description = ? WHERE idSubProduit = ?;";
+   let queryString = "";
+    majSubProduits.forEach(majSubProd => 
+    {
+        data.push(majSubProd.libelle);
+        data.push(majSubProd.description);
+        data.push(majSubProd.idSubProduit);
+        queryString += atomicQueryString;
+    });
+
+    return new Promise((resolve, reject)=> sql.query(queryString, data, (err, querysubprod) => err ? reject(err) : resolve(querysubprod)))
+}
 
 module.exports = SubProduit;
