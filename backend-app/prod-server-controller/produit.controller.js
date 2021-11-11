@@ -43,7 +43,7 @@ exports.add = (req, res) =>
         }
         else 
         {
-            res.send({productId});
+            res.send(productId.toString());
         }
     });
 };

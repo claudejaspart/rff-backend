@@ -97,9 +97,7 @@ Produit.addProduit = (addProduit, result) =>
             // ajoute la relation entre le produit et les sous-produits
             let newSubProduitsIds = [querysubprod[0].insertId,querysubprod[1].insertId];
             hasSubProduits.linkProductWithSubProductsPromise(newProduitId, newSubProduitsIds)
-            .then(queryLink => {
-                console.log("query id : " + newProduitId)
-                result(null, newProduitId)})
+            .then(queryLink => result(null, newProduitId))
             .catch(err => result(err, null))
         })
         .catch(err => result(err, null))
