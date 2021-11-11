@@ -11,8 +11,6 @@ const Produit = (produit)=>
     this.subProduit = produit.subProduit
 }
 
-
-
 // recupere la liste complete de tous les articles avec tous leurs détails
 Produit.getCompleteList = (result) => 
 {   
@@ -31,6 +29,24 @@ Produit.getCompleteList = (result) =>
     .catch(err=>result(err, null));
 };
 
+// récupere un produit et ses sous-produits
+Produit.getOne = (productId, result) => 
+{   
+    // récupération de l'article
+    getOneProductPromise(productId)
+    .then(selectedProduct =>
+        {
+            // récupération des sous-produits
+            SubProduit.getSubProduitsPromise(getListProduitIds(selectedProduct))
+            .then(subProduits =>
+            {
+                selectedProduct = insertData(selectedProduct, subProduits, 'subProduits');
+                result(null, selectedProduct);
+            })
+            .catch(err=>result(err, null));
+        })
+    .catch(err=>result(err, null))
+};
 
 // retourne tous les produits et leurs sous-produits
 Produit.getProduitsAndSubsPromise = (idArticles) =>
@@ -59,7 +75,7 @@ Produit.updateProduit = (majProduit, result) =>
     .then(queryres =>
     {
         SubProduit.updateSubProduitsPromise(majProduit.subProduits)
-        .then(querysubprod => result(null, querysubprod))
+        .then(querysubprod => result(null, majProduit.idProduit))
         .catch(err => result(err, null))
     })
     .catch(err => result(err, null));
@@ -81,7 +97,9 @@ Produit.addProduit = (addProduit, result) =>
             // ajoute la relation entre le produit et les sous-produits
             let newSubProduitsIds = [querysubprod[0].insertId,querysubprod[1].insertId];
             hasSubProduits.linkProductWithSubProductsPromise(newProduitId, newSubProduitsIds)
-            .then(queryLink => result(null, queryLink))
+            .then(queryLink => {
+                console.log("query id : " + newProduitId)
+                result(null, newProduitId)})
             .catch(err => result(err, null))
         })
         .catch(err => result(err, null))
@@ -90,7 +108,7 @@ Produit.addProduit = (addProduit, result) =>
 }
 
 
-// requete : tous les produits d'une liste d'ids
+// requete : tous les produits d'une liste d'ids d'article
 Produit.getProduitsPromise = (idArticles) =>
 {
     let queryString =   "select hpr.idArticle, prod.idProduit, prod.imageLink, prod.produitLink from produits prod \
@@ -98,6 +116,13 @@ Produit.getProduitsPromise = (idArticles) =>
                         where hpr.idArticle in (?);"
 
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, produits) => err ? reject(err) : resolve(produits)))
+}
+
+// requete : un seul produit 
+getOneProductPromise = (productId) =>
+{
+    let queryString =   "select idProduit, imageLink, produitLink from produits where idProduit = ?;";
+    return new Promise((resolve, reject)=> sql.query(queryString, [productId], (err, selectedProduct) => err ? reject(err) : resolve(selectedProduct)))
 }
 
 // requete : tous les produits 

@@ -16,10 +16,26 @@ exports.getAll = (req, res) =>
     });
 };
 
+// controlleur - recuperation d'un article complet
+exports.findOne = (req, res) => 
+{
+    Produit.getOne(req.params.productId, (err, data) => 
+    {
+        if (err)
+        {
+            res.status(500).send({message: err.message || "Erreur lors de la récupération du produit."});
+        }
+        else 
+        {
+            res.send(data);
+        }
+    });
+};
+
 // controlleur - ajout d'un produit
 exports.add = (req, res) => 
 {
-    Produit.addProduit(req.body, (err, result) => 
+    Produit.addProduit(req.body, (err, productId) => 
     {
         if (err)
         {
@@ -27,7 +43,7 @@ exports.add = (req, res) =>
         }
         else 
         {
-            res.status(200).send();
+            res.send({productId});
         }
     });
 };
@@ -35,7 +51,7 @@ exports.add = (req, res) =>
 // controlleur - maj d'un produit
 exports.update = (req, res) => 
 {
-    Produit.updateProduit(req.body, (err, result) => 
+    Produit.updateProduit(req.body, (err, productId) => 
     {
         if (err)
         {
@@ -43,7 +59,7 @@ exports.update = (req, res) =>
         }
         else 
         {
-            res.status(200).send();
+            res.send(productId.toString());
         }
     });
 };
