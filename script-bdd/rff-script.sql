@@ -29,6 +29,7 @@ CREATE TABLE `Utilisateurs` (
 CREATE TABLE `Articles` (
   `idArticle` int NOT NULL AUTO_INCREMENT,
   `datePublication` datetime,
+  `archive` longblob,
   `level` int,
   PRIMARY KEY (`idArticle`)
 );

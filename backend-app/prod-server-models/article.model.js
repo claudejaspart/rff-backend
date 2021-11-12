@@ -9,6 +9,7 @@ let Article = (article)=>
     this.idArticle = article.idArticle,
     this.datePublication = article.datepublication,
     this.level = article.level,
+    this.archive = article.archive,
     this.tags = article.tags,
     this.subArticles = article.subArticles,
     this.produits = article.produits
