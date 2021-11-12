@@ -25,7 +25,7 @@ Tag.findAll = (result) =>
 // encapsulation une promise
 Tag.getTagsByIdPromise = (idArticles) =>
 {
-    let tagQuery =      "select idArticle, libelle, language from tags t \
+    let tagQuery =      "select t.idTag, idArticle, libelle, language from tags t \
                         inner join hastags ht on ht.idTag = t.idTag \
                         where ht.idArticle in (?) \
                         order by idArticle desc" ;
@@ -35,7 +35,7 @@ Tag.getTagsByIdPromise = (idArticles) =>
 
 getAllTagsPromise = () =>
 {
-    let tagQuery = "select libelle, language from tags order by libelle;";
+    let tagQuery = "select idTag, libelle, language from tags order by libelle;";
     return new Promise((resolve, reject)=>sql.query(tagQuery, (err, tags) => err ? reject(err) : resolve(tags)))
 };
 
