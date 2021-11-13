@@ -33,4 +33,23 @@ SubArticle.getSubArticlesReducedPromise = (idArticles) =>
     return new Promise((resolve, reject)=> sql.query(queryString, [idArticles], (err, subArticles) => err ? reject(err) : resolve(subArticles)))
 }
 
+// requete : insertion des subArticles
+SubArticle.newSubArticlesPromise = (newSubArticles) =>
+{
+    let data = [];
+    let atomicQueryString =  "INSERT INTO subArticles(titre,description,richTextData,videoLink,language) VALUES (?,?,?,?,?);";
+    let queryString = "";
+    newSubArticles.forEach(newSubArt => 
+    {
+        data.push(newSubArt.titre);
+        data.push(newSubArt.description);
+        data.push(newSubArt.richTextData);
+        data.push(newSubArt.videoLink);
+        data.push(newSubArt.language);
+        queryString += atomicQueryString;
+    });
+
+    return new Promise((resolve, reject)=> sql.query(queryString, data, (err, subArticles) => err ? reject(err) : resolve(subArticles)))
+}
+
 module.exports = SubArticle;

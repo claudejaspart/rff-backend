@@ -1,5 +1,6 @@
 const Article = require("../prod-server-models/article.model");
 
+
 // controlleur - recuperation des articles
 exports.findAll = (req, res) => 
 {
@@ -42,6 +43,38 @@ exports.findOne = (req, res) =>
         else 
         {
             res.send(data);
+        }
+    });
+};
+
+// controlleur - ajout d'un nouvel article
+exports.addNew = (req, res) => 
+{
+    Article.add(JSON.parse(req.body.article), (err, data) => 
+    {
+        if (err)
+        {
+            res.status(500).send({message: err.message || "Erreur lors de l'ajout du nouvel article."});
+        }
+        else 
+        {
+            res.status(200).send();
+        }
+    });
+};
+
+// controlleur - mis à jour d'un article
+exports.maj = (req, res) => 
+{
+    Article.update(req.body, (err, data) => 
+    {
+        if (err)
+        {
+            res.status(500).send({message: err.message || "Erreur lors de la mise à jour de l'article."});
+        }
+        else 
+        {
+            res.status(200).send();
         }
     });
 };

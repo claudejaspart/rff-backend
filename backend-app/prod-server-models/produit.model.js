@@ -164,7 +164,7 @@ function getListProduitIds(produits)
 
 
 // insertion des différents champs dans les produits
-function insertData(produits,data, dataLabel)
+function insertData(produits,data,dataLabel)
 {
     [...produits].forEach(produit => 
     {

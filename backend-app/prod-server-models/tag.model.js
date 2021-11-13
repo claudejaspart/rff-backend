@@ -39,4 +39,31 @@ getAllTagsPromise = () =>
     return new Promise((resolve, reject)=>sql.query(tagQuery, (err, tags) => err ? reject(err) : resolve(tags)))
 };
 
+Tag.insertOrUpdateTagsPromise = (currentTags) =>
+{
+    let data = [];
+    let insertTagQuery =  "INSERT INTO tags(libelle,language) VALUES (?,?);";
+    let updateTagQuery =  "UPDATE tags SET libelle = ? WHERE idTag = ?;"
+    let queryString = "";
+    currentTags.forEach(currentTag => 
+    {
+        if (currentTag.idTag < 0)
+        {
+            // insertion        
+            data.push(currentTag.libelle);
+            data.push(currentTag.language);
+            queryString += insertTagQuery;
+        }
+        else
+        {
+            // update
+            data.push(currentTag.libelle);
+            data.push(currentTag.idTag);
+            queryString += updateTagQuery;
+        }
+    });
+
+    return new Promise((resolve, reject)=> sql.query(queryString, data, (err, newTags) => err ? reject(err) : resolve(newTags)))
+}
+
 module.exports = Tag;

@@ -1,7 +1,11 @@
 const sql = require("./db");
 const Tag = require("./tag.model");
-const SubArticle = require("./subarticle.model")
-const Produit = require("./produit.model")
+const SubArticle = require("./subarticle.model");
+const Produit = require("./produit.model");
+const HasSubArticles = require('./hasSubArticles.model');
+const HasProduits = require('./hasProduits.model');
+const HasTags = require('./hasTags.model');
+
 
 // constructeur
 let Article = (article)=>
@@ -119,7 +123,67 @@ Article.getOne = (articleId, result) =>
     .catch(err=>result(err, null));
 };
 
+// ajout d'un nouvel article
+Article.add = (article, result) => 
+{   
+    
+    // liste des ID
+    let newArticleId = 0;
 
+    // insertion article
+    createNewArticlePromise(article.level)
+    .then(newArticle =>
+    {
+        newArticleId = newArticle.insertId;
+        
+        // insertion subArticles
+        SubArticle.newSubArticlesPromise(article.subArticles)
+        .then( newSubArticles =>
+        {
+            let newSubArticlesId = [newSubArticles[0].insertId, newSubArticles[1].insertId]
+            // insertion des subArticles dans la table de relation
+            HasSubArticles.linkArticleWithSubArticlesPromise(newArticleId,newSubArticlesId)
+            .then(
+                linkedSubArticles =>
+                {
+                    // link entre les produits et l'article
+                    HasProduits.linkArticleWithProductsPromise(newArticleId, article.produits)
+                    .then( linkedProduits =>
+                    {
+                        Tag.insertOrUpdateTagsPromise(article.tags)
+                        .then(newTags =>
+                        {
+                            HasTags.linkArticleWithTagsPromise(newArticleId, article.tags, newTags)
+                            .then(hasTagsQuery =>
+                            {
+                                result(null, 222);
+                            })
+                            .catch(err=>result(err,null))
+                        })
+                        .catch(err => result(err, null))
+                    })
+                    .catch(err => result(err,null))
+                }
+            )
+            .catch(err=>result(err,null))
+
+            
+        })
+        .catch(err=> result(err, null))
+
+
+        
+    })
+    .catch(err => result(err, null))
+
+
+};
+
+// maj d'un article
+Article.update = (article, result) => 
+{   
+    //console.log(article);
+};
 
 
 // retourne la liste des IDs des articles récupérés
@@ -138,6 +202,12 @@ function getAllArticlesPromise()
 function getOneArticlePromise(articleId)
 {
     return new Promise((resolve, reject)=> sql.query("select * from articles where idArticle = ?", [articleId], (err, articles) => err ? reject(err) : resolve(articles)))
+}
+
+// requête : insertion d'un nouvel article
+function createNewArticlePromise(level)
+{
+    return new Promise((resolve, reject)=> sql.query("INSERT INTO articles(datePublication, level) VALUES ( now(), ?)", [level], (err, articles) => err ? reject(err) : resolve(articles)))
 }
 
 // insertion des différents champs dans les articles

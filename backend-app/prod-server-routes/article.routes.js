@@ -1,3 +1,21 @@
+const multer = require('multer');
+const path = require('path');
+
+// configuration de multer
+const storage = multer.diskStorage(
+{
+    destination: function(req, file, cb) 
+    {
+        cb(null, path.join(__dirname, '/uploads/'));
+    },
+    filename: function(req, file, cb) 
+    {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({storage:storage});
+
+
 module.exports = (app) => 
 {
     const articles = require("../prod-server-controller/article.controller");
@@ -10,5 +28,11 @@ module.exports = (app) =>
 
     // route : récupération d'un article
     app.get("/article/:idArticle", articles.findOne);
+
+    // route : ajout d'un nouvel article
+    app.post("/article", upload.any('zip'), articles.addNew);
+
+    // route : maj d'un article
+    //app.put("/article", articles.maj);
 
 };
