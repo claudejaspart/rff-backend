@@ -6,7 +6,7 @@ const storage = multer.diskStorage(
 {
     destination: function(req, file, cb) 
     {
-        cb(null, path.join(__dirname, '/uploads/'));
+        cb(null, path.join(__dirname, '../archives/'));
     },
     filename: function(req, file, cb) 
     {
@@ -33,6 +33,5 @@ module.exports = (app) =>
     app.post("/article", upload.any('zip'), articles.addNew);
 
     // route : maj d'un article
-    //app.put("/article", articles.maj);
-
+    app.put("/article", upload.any('zip'), articles.maj);
 };

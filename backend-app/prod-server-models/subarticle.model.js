@@ -52,4 +52,24 @@ SubArticle.newSubArticlesPromise = (newSubArticles) =>
     return new Promise((resolve, reject)=> sql.query(queryString, data, (err, subArticles) => err ? reject(err) : resolve(subArticles)))
 }
 
+// requete : update des subArticles
+SubArticle.updateSubArticlesPromise = (majSubArticles) =>
+{
+    let data = [];
+    let atomicQueryString =  "update subArticles set titre = ?, description = ?,richTextData = ?,videoLink = ? ,language = ? WHERE idSubArticle = ?;";
+    let queryString = "";
+    majSubArticles.forEach(upSubArt => 
+    {
+        data.push(upSubArt.titre);
+        data.push(upSubArt.description);
+        data.push(upSubArt.richTextData);
+        data.push(upSubArt.videoLink);
+        data.push(upSubArt.language);
+        data.push(upSubArt.idSubArticle)
+        queryString += atomicQueryString;
+    });
+
+    return new Promise((resolve, reject)=> sql.query(queryString, data, (err, subArticles) => err ? reject(err) : resolve(subArticles)))
+}
+
 module.exports = SubArticle;

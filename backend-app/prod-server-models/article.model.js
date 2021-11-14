@@ -126,7 +126,6 @@ Article.getOne = (articleId, result) =>
 // ajout d'un nouvel article
 Article.add = (article, result) => 
 {   
-    
     // liste des ID
     let newArticleId = 0;
 
@@ -175,14 +174,50 @@ Article.add = (article, result) =>
         
     })
     .catch(err => result(err, null))
-
-
 };
 
 // maj d'un article
 Article.update = (article, result) => 
 {   
-    //console.log(article);
+
+    // maj tags avec table de relation
+    updateArticlePromise(article.level, article.idArticle)
+    .then( updatedArticle =>
+    {
+        SubArticle.updateSubArticlesPromise(article.subArticles)
+        .then( updatedSubArticles =>
+        {
+            HasProduits.unlinkArticleProductsPromise(article.idArticle)
+            .then( unlinkProducts =>
+            {
+                // link entre les produits et l'article
+                HasProduits.linkArticleWithProductsPromise(article.idArticle, article.produits)
+                .then( linkedProduits =>
+                {
+                    HasTags.unlinkArticleTagsPromise(article.idArticle)
+                    .then( unlinkTags =>
+                    {
+                        Tag.insertOrUpdateTagsPromise(article.tags)
+                        .then(newTags =>
+                        {
+                            HasTags.linkArticleWithTagsPromise(article.idArticle, article.tags, newTags)
+                            .then(hasTagsQuery =>
+                            {
+                                result(null, 333);
+                            })
+                            .catch(err=>result(err,null))
+                        })
+                        .catch(err => result(err, null))
+                    })
+                    .catch(err => result(err, null)) 
+                })
+                .catch(err => result(err, null))
+            })
+            .catch(err => result(err, null))
+        })
+        .catch(err => result(err, null)) 
+    })
+    .catch(err => result(err, null))
 };
 
 
@@ -208,6 +243,13 @@ function getOneArticlePromise(articleId)
 function createNewArticlePromise(level)
 {
     return new Promise((resolve, reject)=> sql.query("INSERT INTO articles(datePublication, level) VALUES ( now(), ?)", [level], (err, articles) => err ? reject(err) : resolve(articles)))
+}
+
+// requête : update d'un nouvel article
+function updateArticlePromise(level, articleId)
+{
+    let updateArticleQuery = "UPDATE articles SET level = ? WHERE idArticle = ?;";
+    return new Promise((resolve, reject)=> sql.query(updateArticleQuery, [level,articleId], (err, articles) => err ? reject(err) : resolve(articles)))
 }
 
 // insertion des différents champs dans les articles

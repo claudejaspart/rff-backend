@@ -37,5 +37,10 @@ hasTags.linkArticleWithTagsPromise = (idArticle, oldTags, tags) =>
     return new Promise((resolve, reject)=> sql.query(queryString, data, (err, queryhastags) => err ? reject(err) : resolve(queryhastags)))
 };
 
+// supprime toutes les relations de tags avec l'aticle
+hasTags.unlinkArticleTagsPromise = (idArticle) =>
+{
+    return new Promise((resolve, reject)=> sql.query("delete from hasTags where idArticle = ?", [idArticle], (err, deltags) => err ? reject(err) : resolve(deltags)))
+};
 
 module.exports = hasTags;

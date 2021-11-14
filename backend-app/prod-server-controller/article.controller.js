@@ -66,7 +66,7 @@ exports.addNew = (req, res) =>
 // controlleur - mis à jour d'un article
 exports.maj = (req, res) => 
 {
-    Article.update(req.body, (err, data) => 
+    Article.update(JSON.parse(req.body.article), (err, data) => 
     {
         if (err)
         {
